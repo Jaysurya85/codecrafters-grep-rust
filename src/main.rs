@@ -21,8 +21,8 @@ fn main() {
     }
 
     let mut pattern = env::args().nth(2).unwrap();
-    if (pattern == `r"\d"`){
-        pattern = `r"1234567890"`;
+    if &pattern == "\\d" {
+        pattern = "1234567890".to_string();
     }
     let mut input_line = String::new();
 
