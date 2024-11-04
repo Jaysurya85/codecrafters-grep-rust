@@ -24,14 +24,17 @@ impl From<String> for Pattern {
 }
 
 fn match_single_letter(input_line: &str, pattern: &str) -> bool {
+    println!("found a single character match");
     input_line.contains(pattern)
 }
 
 fn match_digit(input_line: &str) -> bool {
+    println!("found a digit match");
     input_line.contains(|c: char| c.is_digit(10))
 }
 
 fn match_character(input_line: &str) -> bool {
+    println!("found a character match");
     input_line.contains(|c: char| c.is_ascii_alphanumeric())
 }
 
