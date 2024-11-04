@@ -2,23 +2,34 @@ use std::env;
 use std::io;
 use std::process;
 
-fn match_pattern(input_line: &str, pattern: &str) -> bool {
-    if pattern.chars().count() == 1 {
-        return input_line.contains(pattern);
-    } else {
-        panic!("Unhandled pattern: {}", pattern)
+enum Pattern {
+    Single,
+    Digit,
+    Unknown,
+}
+
+impl Form<String> for Pattern {
+    fn from(string_pattern: String) -> Pattern {
+        if string_pattern.chars().count() == 1 {
+            return Pattern::Single;
+        } else if string_pattern == "\\d" {
+            return Pattern::Digit;
+        } else {
+            return Pattern::Unknown;
+        }
     }
 }
 
-fn match_digit(input_line: &str, pattern: &str) -> bool {
-    for c in pattern.chars() {
-        let single_digit: &str = &c.to_string();
-        let found = match_pattern(input_line, single_digit);
-        if found {
-            return true;
-        }
+fn match_pattern(input_line: &str, pattern: &Pattern) -> bool {
+    if *pattern == Pattern::Single {
+        return input_line.contains(pattern);
     }
-    false
+    else if *pattern == Pattern::Digit{
+        return input_line.contains(|c: char| c.is_digit(10));        
+    }
+    else {
+        panic!("Unhandled pattern: {}", pattern)
+    }
 }
 
 // Usage: echo <input_text> | your_program.sh -E <pattern>
@@ -31,16 +42,15 @@ fn main() {
         process::exit(1);
     }
 
-    let mut pattern = env::args().nth(2).unwrap();
-    if &pattern == "\\d" {
-        pattern = "1234567890".to_string();
-    }
+    let string_pattern = env::args().nth(2).unwrap();
+    let pattern: Pattern = Pattern::from(string_pattern);
+
     let mut input_line = String::new();
 
     io::stdin().read_line(&mut input_line).unwrap();
 
     // Uncomment this block to pass the first stage
-    if match_digit(&input_line, &pattern) {
+    if match(&input_line, pattern) {
         process::exit(0)
     } else {
         process::exit(1)
