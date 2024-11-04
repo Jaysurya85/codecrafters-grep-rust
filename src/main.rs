@@ -23,11 +23,9 @@ impl Form<String> for Pattern {
 fn match_pattern(input_line: &str, pattern: &Pattern) -> bool {
     if *pattern == Pattern::Single {
         return input_line.contains(pattern);
-    }
-    else if *pattern == Pattern::Digit{
-        return input_line.contains(|c: char| c.is_digit(10));        
-    }
-    else {
+    } else if *pattern == Pattern::Digit {
+        return input_line.contains(|c: char| c.is_digit(10));
+    } else {
         panic!("Unhandled pattern: {}", pattern)
     }
 }
@@ -50,7 +48,7 @@ fn main() {
     io::stdin().read_line(&mut input_line).unwrap();
 
     // Uncomment this block to pass the first stage
-    if match(&input_line, pattern) {
+    if match_pattern(&input_line, &pattern) {
         process::exit(0)
     } else {
         process::exit(1)
