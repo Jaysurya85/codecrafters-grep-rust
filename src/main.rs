@@ -5,6 +5,7 @@ use std::process;
 enum Pattern {
     Single(String),
     Digit,
+    Character,
     Unknown,
 }
 
@@ -14,6 +15,8 @@ impl From<String> for Pattern {
             return Pattern::Single(string_pattern);
         } else if string_pattern == "\\d" {
             return Pattern::Digit;
+        } else if string_pattern == "\\w" {
+            return Pattern::Character;
         } else {
             return Pattern::Unknown;
         }
@@ -28,10 +31,15 @@ fn match_digit(input_line: &str) -> bool {
     input_line.contains(|c: char| c.is_digit(10))
 }
 
+fn match_character(input_line: &str) -> bool {
+    input_line.contains(|c: char| c.is_ascii_alphanumeric())
+}
+
 fn match_pattern(input_line: &str, pattern: Pattern) -> bool {
     return match pattern {
         Pattern::Single(s) => match_single_letter(input_line, &s),
         Pattern::Digit => match_digit(input_line),
+        Pattern::Character => match_character(input_line),
         Pattern::Unknown => false,
     };
 }
