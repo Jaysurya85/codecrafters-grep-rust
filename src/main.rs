@@ -20,10 +20,18 @@ impl From<String> for Pattern {
     }
 }
 
+fn match_single_letter(input_line: &str, pattern: &str) -> bool {
+    input_line.contains(pattern)
+}
+
+fn match_digit(input_line: &str) -> bool {
+    input_line.contains(|c: char| c.is_digit(10))
+}
+
 fn match_pattern(input_line: &str, pattern: Pattern) -> bool {
     return match pattern {
-        Pattern::Single(s) => input_line.contains(&s),
-        Pattern::Digit => input_line.contains(|c: char| c.is_digit(10)),
+        Pattern::Single(s) => match_single_letter(input_line, &s),
+        Pattern::Digit => match_digit(input_line),
         Pattern::Unknown => false,
     };
 }
